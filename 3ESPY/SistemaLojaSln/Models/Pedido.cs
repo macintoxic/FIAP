@@ -1,7 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+
+
 
 namespace LojaSystem.Models
 {
+    
+    [Index(["Id", "ClienteId"], IsUnique = true)]
     public class Pedido
     {
         
@@ -10,6 +16,7 @@ namespace LojaSystem.Models
         
         #region properties
 
+        
         public int Id { get; set; }
         
         public DateTime DataPedido { get; set; }
