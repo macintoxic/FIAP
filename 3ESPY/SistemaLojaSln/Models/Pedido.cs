@@ -4,6 +4,12 @@ namespace LojaSystem.Models
 {
     public class Pedido
     {
+        
+        // Navigation Property - Many-to-One
+        public Cliente Cliente { get; set; }
+        
+        #region properties
+
         public int Id { get; set; }
         
         public DateTime DataPedido { get; set; }
@@ -16,10 +22,12 @@ namespace LojaSystem.Models
         // Foreign Key
         public int ClienteId { get; set; }
         
-        // Navigation Property - Many-to-One
-        public Cliente Cliente { get; set; }
+        
         
         // Navigation Property - One-to-Many
         public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();
+        
+
+        #endregion
     }
 }

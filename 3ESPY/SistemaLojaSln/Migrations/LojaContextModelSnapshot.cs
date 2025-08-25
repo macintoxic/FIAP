@@ -213,9 +213,6 @@ namespace SistemaLoja.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("DataCadastro")
                         .HasColumnType("TEXT");
 
@@ -232,15 +229,12 @@ namespace SistemaLoja.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoriaId");
-
                     b.ToTable("Produtos");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            CategoriaId = 1,
                             DataCadastro = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EstoqueAtual = 25,
                             Nome = "Smartphone Samsung Galaxy",
@@ -249,7 +243,6 @@ namespace SistemaLoja.Migrations
                         new
                         {
                             Id = 2,
-                            CategoriaId = 2,
                             DataCadastro = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EstoqueAtual = 15,
                             Nome = "Notebook Dell Inspiron",
@@ -258,7 +251,6 @@ namespace SistemaLoja.Migrations
                         new
                         {
                             Id = 3,
-                            CategoriaId = 3,
                             DataCadastro = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EstoqueAtual = 10,
                             Nome = "Mesa de Escritório",
@@ -267,11 +259,57 @@ namespace SistemaLoja.Migrations
                         new
                         {
                             Id = 4,
-                            CategoriaId = 2,
                             DataCadastro = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EstoqueAtual = 50,
                             Nome = "Mouse Gamer Logitech",
                             Preco = 199.90m
+                        });
+                });
+
+            modelBuilder.Entity("LojaSystem.Models.ProdutoCategoria", b =>
+                {
+                    b.Property<int>("ProdutoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ProdutoId", "CategoriaId");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.ToTable("ProdutoCategorias");
+
+                    b.HasData(
+                        new
+                        {
+                            ProdutoId = 1,
+                            CategoriaId = 1
+                        },
+                        new
+                        {
+                            ProdutoId = 2,
+                            CategoriaId = 2
+                        },
+                        new
+                        {
+                            ProdutoId = 2,
+                            CategoriaId = 1
+                        },
+                        new
+                        {
+                            ProdutoId = 3,
+                            CategoriaId = 3
+                        },
+                        new
+                        {
+                            ProdutoId = 4,
+                            CategoriaId = 2
+                        },
+                        new
+                        {
+                            ProdutoId = 4,
+                            CategoriaId = 1
                         });
                 });
 
@@ -316,20 +354,23 @@ namespace SistemaLoja.Migrations
                     b.Navigation("Cliente");
                 });
 
-            modelBuilder.Entity("LojaSystem.Models.Produto", b =>
+            modelBuilder.Entity("LojaSystem.Models.ProdutoCategoria", b =>
                 {
                     b.HasOne("LojaSystem.Models.Categoria", "Categoria")
-                        .WithMany("Produtos")
+                        .WithMany()
                         .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LojaSystem.Models.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");
-                });
 
-            modelBuilder.Entity("LojaSystem.Models.Categoria", b =>
-                {
-                    b.Navigation("Produtos");
+                    b.Navigation("Produto");
                 });
 
             modelBuilder.Entity("LojaSystem.Models.Cliente", b =>

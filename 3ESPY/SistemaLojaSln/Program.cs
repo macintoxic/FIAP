@@ -1,4 +1,33 @@
-﻿
+﻿// ========================================
+// COMANDOS PARA EXECUTAR O PROJETO:
+// ========================================
+
+// 1. Criar novo projeto console (somente se for criar o projeto do zero) : 
+// dotnet new console -n LojaSystem  
+
+// 2. Adicionar pacotes necessários:
+// dotnet add package Microsoft.EntityFrameworkCore.Sqlite
+// dotnet add package Microsoft.EntityFrameworkCore.Proxies (para Lazy Loading)
+// dotnet add package Microsoft.EntityFrameworkCore.Design
+// 3. Executar o projeto:
+// dotnet run
+
+// 4. Para usar Migrations (opcional):
+// dotnet ef migrations add InitialCreate
+// dotnet ef database update
+
+// ========================================
+// ESTRUTURA DE PASTAS DO PROJETO:
+// ========================================
+/*
+LojaSystem/
+├── Models/
+├── Data/
+│   └── LojaContext.cs
+├── Services/
+├── Program.cs
+└── LojaSystem.csproj
+*/
 using Microsoft.EntityFrameworkCore;
 using LojaSystem.Data;
 using LojaSystem.Services;
@@ -42,7 +71,8 @@ namespace LojaSystem
             
             foreach (var produto in produtosComCategoria)
             {
-                Console.WriteLine($"{produto.Nome} | Categoria: {produto.Categoria.Nome} | R$ {produto.Preco:C}");
+                var categoriasNomes = string.Join(", ", produto.Categorias.Select(c => c.Nome));
+                Console.WriteLine($"{produto.Nome} | Categorias: {categoriasNomes} | R$ {produto.Preco:C}");
             }
             Console.WriteLine();
 
@@ -119,42 +149,3 @@ namespace LojaSystem
     }
 }
 
-// ========================================
-// COMANDOS PARA EXECUTAR O PROJETO:
-// ========================================
-
-// 1. Criar novo projeto console (somente se for criar o projeto do zero) : 
-// dotnet new console -n LojaSystem  
-
-// 2. Adicionar pacotes necessários:
-// dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-// dotnet add package Microsoft.EntityFrameworkCore.Tools
-// dotnet add package Microsoft.EntityFrameworkCore.Proxies (para Lazy Loading)
-
-// 3. Executar o projeto:
-// dotnet run
-
-// 4. Para usar Migrations (opcional):
-// dotnet ef migrations add InitialCreate
-// dotnet ef database update
-
-// ========================================
-// ESTRUTURA DE PASTAS DO PROJETO:
-// ========================================
-/*
-LojaSystem/
-├── Models/
-│   ├── Categoria.cs
-│   ├── Produto.cs
-│   ├── Cliente.cs
-│   ├── Pedido.cs
-│   └── ItemPedido.cs
-├── Data/
-│   └── LojaContext.cs
-├── Services/
-│   ├── CategoriaService.cs
-│   ├── ProdutoService.cs
-│   └── PedidoService.cs
-├── Program.cs
-└── LojaSystem.csproj
-*/

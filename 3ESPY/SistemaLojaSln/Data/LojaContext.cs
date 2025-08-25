@@ -12,6 +12,7 @@ namespace LojaSystem.Data
         public DbSet<Pedido> Pedidos { get; set; }
         public DbSet<ItemPedido> ItensPedido { get; set; }
         public DbSet<Perfil> Perfis { get; set; }
+        public DbSet<ProdutoCategoria> ProdutoCategorias { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,12 +27,26 @@ namespace LojaSystem.Data
         {
             // ========== CONFIGURAÇÃO DOS RELACIONAMENTOS ==========
             
-            // Produto -> Categoria (Many-to-One)
+            // Produto <-> Categoria (Many-to-Many)
+            modelBuilder.Entity<ProdutoCategoria>()
+                .HasKey(pc => new { pc.ProdutoId, pc.CategoriaId });
+            
+            modelBuilder.Entity<ProdutoCategoria>()
+                .HasOne(pc => pc.Produto)
+                .WithMany()
+                .HasForeignKey(pc => pc.ProdutoId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            modelBuilder.Entity<ProdutoCategoria>()
+                .HasOne(pc => pc.Categoria)
+                .WithMany()
+                .HasForeignKey(pc => pc.CategoriaId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
             modelBuilder.Entity<Produto>()
-                .HasOne(p => p.Categoria)
+                .HasMany(p => p.Categorias)
                 .WithMany(c => c.Produtos)
-                .HasForeignKey(p => p.CategoriaId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .UsingEntity<ProdutoCategoria>();
 
             // Pedido -> Cliente (Many-to-One)
             modelBuilder.Entity<Pedido>()
@@ -72,10 +87,20 @@ namespace LojaSystem.Data
 
             // Produtos
             modelBuilder.Entity<Produto>().HasData(
-                new Produto { Id = 1, Nome = "Smartphone Samsung Galaxy", Preco = 1299.90m, EstoqueAtual = 25, CategoriaId = 1, DataCadastro = new DateTime(2025, 1, 1) },
-                new Produto { Id = 2, Nome = "Notebook Dell Inspiron", Preco = 2499.99m, EstoqueAtual = 15, CategoriaId = 2, DataCadastro = new DateTime(2025, 1, 1) },
-                new Produto { Id = 3, Nome = "Mesa de Escritório", Preco = 599.90m, EstoqueAtual = 10, CategoriaId = 3, DataCadastro = new DateTime(2025, 1, 1) },
-                new Produto { Id = 4, Nome = "Mouse Gamer Logitech", Preco = 199.90m, EstoqueAtual = 50, CategoriaId = 2, DataCadastro = new DateTime(2025, 1, 1) }
+                new Produto { Id = 1, Nome = "Smartphone Samsung Galaxy", Preco = 1299.90m, EstoqueAtual = 25, DataCadastro = new DateTime(2025, 1, 1) },
+                new Produto { Id = 2, Nome = "Notebook Dell Inspiron", Preco = 2499.99m, EstoqueAtual = 15, DataCadastro = new DateTime(2025, 1, 1) },
+                new Produto { Id = 3, Nome = "Mesa de Escritório", Preco = 599.90m, EstoqueAtual = 10, DataCadastro = new DateTime(2025, 1, 1) },
+                new Produto { Id = 4, Nome = "Mouse Gamer Logitech", Preco = 199.90m, EstoqueAtual = 50, DataCadastro = new DateTime(2025, 1, 1) }
+            );
+
+            // Relacionamentos Many-to-Many Produto <-> Categoria
+            modelBuilder.Entity<ProdutoCategoria>().HasData(
+                new ProdutoCategoria { ProdutoId = 1, CategoriaId = 1 }, // Smartphone -> Eletrônicos
+                new ProdutoCategoria { ProdutoId = 2, CategoriaId = 2 }, // Notebook -> Informática
+                new ProdutoCategoria { ProdutoId = 2, CategoriaId = 1 }, // Notebook -> Eletrônicos (produto pode ter múltiplas categorias)
+                new ProdutoCategoria { ProdutoId = 3, CategoriaId = 3 }, // Mesa -> Móveis
+                new ProdutoCategoria { ProdutoId = 4, CategoriaId = 2 }, // Mouse -> Informática
+                new ProdutoCategoria { ProdutoId = 4, CategoriaId = 1 }  // Mouse -> Eletrônicos
             );
 
             // Clientes

@@ -57,7 +57,7 @@ namespace LojaSystem.Services
                 .Include(p => p.Cliente)
                 .Include(p => p.ItensPedido)
                 .ThenInclude(i => i.Produto)
-                .ThenInclude(prod => prod.Categoria)
+                .ThenInclude(prod => prod.Categorias)
                 .OrderByDescending(p => p.DataPedido)
                 .ToListAsync();
         }

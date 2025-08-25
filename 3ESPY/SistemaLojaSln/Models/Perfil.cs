@@ -4,6 +4,10 @@ namespace LojaSystem.Models
 {
     public class Perfil
     {
+        // Navigation Property - One-to-One
+        public Cliente Cliente { get; set; }
+       #region properties
+
         public int Id { get; set; }
         
         [Required]
@@ -14,8 +18,7 @@ namespace LojaSystem.Models
         
         // Foreign Key para relacionamento 1:1 com Cliente
         public int ClienteId { get; set; }
-        
-        // Navigation Property - One-to-One
-        public Cliente Cliente { get; set; }
+
+        #endregion
     }
 }

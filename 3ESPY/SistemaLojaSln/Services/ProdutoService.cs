@@ -13,11 +13,11 @@ namespace LojaSystem.Services
             _context = context;
         }
 
-        // Listar todos os produtos COM categoria (Eager Loading)
+        // Listar todos os produtos COM categorias (Eager Loading)
         public async Task<List<Produto>> ListarProdutosComCategoria()
         {
             return await _context.Produtos
-                .Include(p => p.Categoria)
+                .Include(p => p.Categorias)
                 .OrderBy(p => p.Nome)
                 .ToListAsync();
         }
@@ -26,8 +26,8 @@ namespace LojaSystem.Services
         public async Task<List<Produto>> BuscarProdutosPorCategoria(int categoriaId)
         {
             return await _context.Produtos
-                .Include(p => p.Categoria)
-                .Where(p => p.CategoriaId == categoriaId)
+                .Include(p => p.Categorias)
+                .Where(p => p.Categorias.Any(c => c.Id == categoriaId))
                 .ToListAsync();
         }
 
@@ -43,7 +43,7 @@ namespace LojaSystem.Services
         public async Task<List<Produto>> ProdutosEstoqueBaixo()
         {
             return await _context.Produtos
-                .Include(p => p.Categoria)
+                .Include(p => p.Categorias)
                 .Where(p => p.EstoqueAtual < 10)
                 .ToListAsync();
         }

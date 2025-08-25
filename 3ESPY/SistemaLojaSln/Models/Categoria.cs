@@ -4,6 +4,11 @@ namespace LojaSystem.Models
 {
     public class Categoria
     {
+        // Navigation Property - Many-to-Many
+        public ICollection<Produto> Produtos { get; set; } = new List<Produto>();
+        
+        #region MyRegion
+
         public int Id { get; set; }
         
         [Required]
@@ -11,8 +16,9 @@ namespace LojaSystem.Models
         public string Nome { get; set; }
         
         public string Descricao { get; set; }
+
+        #endregion
         
-        // Navigation Property - One-to-Many
-        public ICollection<Produto> Produtos { get; set; } = new List<Produto>();
+       
     }
 }

@@ -5,6 +5,11 @@ namespace LojaSystem.Models
 {
     public class Produto
     {
+        
+        // Navigation Property - Many-to-Many
+        public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
+        #region properties 
+
         public int Id { get; set; }
         
         [Required]
@@ -18,13 +23,11 @@ namespace LojaSystem.Models
         
         public DateTime DataCadastro { get; set; }
         
-        // Foreign Key
-        public int CategoriaId { get; set; }
         
-        // Navigation Property - Many-to-One
-        public Categoria Categoria { get; set; }
         
         // Navigation Property - One-to-Many (para ItemPedido)
         public ICollection<ItemPedido> ItensPedido { get; set; } = new List<ItemPedido>();
+
+        #endregion
     }
 }
